@@ -12,7 +12,7 @@ function varinit() {
   $("#massSlider").slider("value", 25); // slider initialisation : jQuery widget
   $("#massSpinner").spinner("value", 25); // number initialisation : jQuery widget
   $("#lengthSlider").slider("value", 10);
-  $("#lengthSpinner").spinner("value", 10);
+  $("#input-voltage").spinner("value", 10);
   $("#dampSlider").slider("value", 0.05);
   $("#dampSpinner").spinner("value", 0.05);
   $("#CsArea").spinner("value", 0.01);
@@ -37,22 +37,22 @@ function varchange() {
   });
 
   $("#lengthSlider").slider({ max: 100, min: 10, step: 10 });
-  $("#lengthSpinner").spinner({ max: 100, min: 10, step: 10 });
+  $("#input-voltage").spinner({ max: 100, min: 10, step: 10 });
 
   $("#lengthSlider").on("slide", function (e, ui) {
-    $("#lengthSpinner").spinner("value", ui.value);
+    $("#input-voltage").spinner("value", ui.value);
     time = 0;
     varupdate();
   });
-  $("#lengthSpinner").on("spin", function (e, ui) {
+  $("#input-voltage").on("spin", function (e, ui) {
     $("#lengthSlider").slider("value", ui.value);
     time = 0;
     varupdate();
   });
-  $("#lengthSpinner").on("change", function () {
+  $("#input-voltage").on("change", function () {
     varchange();
   });
-  $("#lengthSpinner").on("touch-start", function () {
+  $("#input-voltage").on("touch-start", function () {
     varchange();
   });
 
@@ -77,10 +77,10 @@ function varchange() {
 }
 function varupdate() {
   $("#massSpinner").spinner("value", $("#massSlider").slider("value")); //updating slider location with change in spinner(debug)
-  $("#lengthSpinner").spinner("value", $("#lengthSlider").slider("value"));
+  $("#input-voltage").spinner("value", $("#lengthSlider").slider("value"));
   $("#dampSpinner").spinner("value", $("#dampSlider").slider("value"));
   endmass = $("#massSpinner").spinner("value"); //Updating variables
-  beamlength = $("#lengthSpinner").spinner("value");
+  beamlength = $("#input-voltage").spinner("value");
   dampingratio = $("#dampSpinner").spinner("value");
   massbeam = (rho * A * beamlength) / 1000;
   m = (33 / 140) * massbeam + endmass;
@@ -173,3 +173,31 @@ const selectMaterial = function () {
   varupdate();
 };
 materials.addEventListener("change", selectMaterial);
+
+
+
+
+function calculateAndDisplay() {
+  // Get the input voltage value
+  const inputVoltage = parseFloat(document.getElementById('input-voltage').value);
+
+  // Perform calculations (example calculations)
+  const vin = inputVoltage / 1000; // Convert mV to Volt
+  const vout = vin * 2; // Example calculation
+  const pac = vout * 0.5; // Example calculation
+  const pdc = pac * 0.8; // Example calculation
+  const efficiency = (pac / pdc) * 100; // Example calculation
+
+  // Create a new table row with the results
+  const resultsTable = document.getElementById('results-table');
+  const resultsBody = document.getElementById('results-body');
+  const newRow = resultsBody.insertRow();
+  newRow.innerHTML = `
+      <td>${resultsBody.children.length}</td>
+      <td>${vin.toFixed(2)}</td>
+      <td>${vout.toFixed(2)}</td>
+      <td>${pac.toFixed(2)}</td>
+      <td>${pdc.toFixed(2)}</td>
+      <td>${efficiency.toFixed(2)}%</td>
+  `;
+}
