@@ -11,7 +11,7 @@ function varinit() {
   //Variable slider and number input types
   $("#massSlider").slider("value", 25); // slider initialisation : jQuery widget
   $("#massSpinner").spinner("value", 25); // number initialisation : jQuery widget
-  $("#lengthSlider").slider("value", 10);
+  $("#voltageSlider").slider("value", 10);
   $("#input-voltage").spinner("value", 10);
   $("#dampSlider").slider("value", 0.05);
   $("#dampSpinner").spinner("value", 0.05);
@@ -36,16 +36,16 @@ function varchange() {
     varchange();
   });
 
-  $("#lengthSlider").slider({ max: 100, min: 10, step: 10 });
-  $("#input-voltage").spinner({ max: 100, min: 10, step: 10 });
+  $("#voltageSlider").slider({ max: 165, min: 0, step: 5 });
+  $("#input-voltage").spinner({ max: 165, min: 0, step: 5 });
 
-  $("#lengthSlider").on("slide", function (e, ui) {
+  $("#voltageSlider").on("slide", function (e, ui) {
     $("#input-voltage").spinner("value", ui.value);
     time = 0;
     varupdate();
   });
   $("#input-voltage").on("spin", function (e, ui) {
-    $("#lengthSlider").slider("value", ui.value);
+    $("#voltageSlider").slider("value", ui.value);
     time = 0;
     varupdate();
   });
@@ -77,7 +77,7 @@ function varchange() {
 }
 function varupdate() {
   $("#massSpinner").spinner("value", $("#massSlider").slider("value")); //updating slider location with change in spinner(debug)
-  $("#input-voltage").spinner("value", $("#lengthSlider").slider("value"));
+  $("#input-voltage").spinner("value", $("#voltageSlider").slider("value"));
   $("#dampSpinner").spinner("value", $("#dampSlider").slider("value"));
   endmass = $("#massSpinner").spinner("value"); //Updating variables
   beamlength = $("#input-voltage").spinner("value");
@@ -177,27 +177,3 @@ materials.addEventListener("change", selectMaterial);
 
 
 
-function calculateAndDisplay() {
-  // Get the input voltage value
-  const inputVoltage = parseFloat(document.getElementById('input-voltage').value);
-
-  // Perform calculations (example calculations)
-  const vin = inputVoltage / 1000; // Convert mV to Volt
-  const vout = vin * 2; // Example calculation
-  const pac = vout * 0.5; // Example calculation
-  const pdc = pac * 0.8; // Example calculation
-  const efficiency = (pac / pdc) * 100; // Example calculation
-
-  // Create a new table row with the results
-  const resultsTable = document.getElementById('results-table');
-  const resultsBody = document.getElementById('results-body');
-  const newRow = resultsBody.insertRow();
-  newRow.innerHTML = `
-      <td>${resultsBody.children.length}</td>
-      <td>${vin.toFixed(2)}</td>
-      <td>${vout.toFixed(2)}</td>
-      <td>${pac.toFixed(2)}</td>
-      <td>${pdc.toFixed(2)}</td>
-      <td>${efficiency.toFixed(2)}%</td>
-  `;
-}

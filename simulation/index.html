@@ -34,6 +34,20 @@
     ></script>
 
     <script defer src="js/script.js"></script>
+
+    <style>
+      /* Add some basic CSS for styling */
+      #results-table {
+          width: 80%;
+          margin: 20px auto;
+          border-collapse: collapse;
+      }
+      #results-table th, #results-table td {
+          border: 5px solid #ada2d4;
+          padding: 8px;
+          text-align: center;
+      }
+  </style>
   </head>
   <body onload="startsim();varinit();
 ">
@@ -137,19 +151,52 @@
               <h3 class="task-title">Variables</h3>
                 <div class="variables-sections">
 
-               
-                  <div class=""var-div">                  <label for="input-voltage">Input Voltage (mV):</label>
-                  <input type="number" id="input-voltage" value="40">
-                  <button onclick="calculateAndDisplay()">Add to table</button>
-                  </div>
-                <!--<div class="var-div">
-                  <label for="input-voltage">Input Voltage (mV)</label>
-                  <input class="var-spinner" id="input-voltage" name="value" />
+                  <div class="var-div">
+                    <!-- Input Voltage field -->
+                    <label for="input-voltage">Input Voltage (mV):</label>
+                    <input type="number" id="input-voltage" value="20">
+                    <button style="width:30%;" onclick="calculateAndDisplay()">Add to table</button>
+                </div>
+                
+                
+          
+              <script>
+                  function calculateAndDisplay() {
+            // Get the input voltage value
+            const inputVoltage = parseFloat(document.getElementById('input-voltage').value);
+
+            // Perform calculations (example calculations)
+            const RL = 1000;
+            const Ic = 0.002;
+            const Vcc = 12;
+            
+
+            const vin = inputVoltage ; // Convert mV to Volt
+            const vout = ((vin*vin) /(8*RL)); // Example calculation
+            const pac = ((vout * vout) /(2*RL)); // Example calculation
+            const pdc = Vcc * Ic; // Example calculation
+            const efficiency = (pac / pdc) * 100; // Example calculation
+
+            // Create a new table row with the results
+            const resultsBody = document.getElementById('results-body');
+            const newRow = resultsBody.insertRow();
+            newRow.innerHTML = `
+                <td>${resultsBody.children.length}</td>
+                <td>${vin.toFixed(2)}</td>
+                <td>${vout.toFixed(2)}</td>
+                <td>${pac.toFixed(2)}</td>
+                <td>${pdc.toFixed(2)}</td>
+                <td>${efficiency.toFixed(2)}%</td>
+            `;
+        }
+              </script>
+                <!--
+                <div class="var-div">
+                  <label for="lengthSpinner">Length (mm)</label>
+                  <input class="var-spinner" id="lengthSpinner" name="value" />
                   <div class="var-slider" id="lengthSlider"></div>
-                </div>-->
-
-
-               <!--<div class="var-div">
+                </div>
+                <div class="var-div">
                   <label for="dampSpinner">Damping Ratio</label>
                   <input class="var-spinner" id="dampSpinner" name="value" />
                   <div class="var-slider" id="dampSlider"></div>
@@ -168,39 +215,40 @@
               <div class="settings-sections">
                 <div class="control-sections">
 
-                 <button onclick="calculateAndDisplay()" style="width:30%;">Add to table</button>
+                 <button style="width:30%;">Add to table</button>
 			
             <img id="playpausebutton" style="width:40px;" onclick="simstate()" src="./images/blueplaydull.svg" alt="" />
                 <img id="graphbutton" style="width:40px;" onclick="plotgraph()" src="./images/graphbutton.svg" alt="" />
               
-         
                 </div>
               </div>
           </div>
 
           <div id="comments" class="main__task-div">
+            <div class="settings-sections">
             <h3 class="task-title">Results</h3>
+            <table id="results-table">
+              <thead>
+                  <tr>
+                      <th>Serial No.</th>
+                      <th>Vin (Volt)</th>
+                      <th>Vout (Volt)</th>
+                      <th>Pac (Watt)</th>
+                      <th>Pdc (Watt)</th>
+                      <th>Efficiency</th>
+                  </tr>
+              </thead>
+              <tbody id="results-body">
+                  <!-- Results will be added here -->
+              </tbody>
+          </table>
+            </div>
               <div class="settings-sections">
                 <div class="control-sections">
 
                   
                   
-                  <table id="results-table" border="1">
-                    <thead>
-                      <tr>
-                          <th>Serial No.</th>
-                          <th>Vin (Volt)</th>
-                          <th>Vout (Volt)</th>
-                          <th>Pac (Watt)</th>
-                          <th>Pdc (Watt)</th>
-                          <th>Efficiency</th>
-                      </tr>
-                    </thead>
-                    <tbody id=""results-body">
-                    
-                    </tbody>
-                  </table>
-              
+                  
                   <script src="script.js"></script>
                     </div>
                 </div>
@@ -212,32 +260,5 @@
         </div>
       </div>
     </div>
-
-    <script>
-      function calculateAndDisplay() {
-          // Get the input voltage value
-          const inputVoltage = parseFloat(document.getElementById('input-voltage').value);
-
-          // Perform calculations (example calculations)
-          const vin = inputVoltage / 1000; // Convert mV to Volt
-          const vout = vin * 2; // Example calculation
-          const pac = vout * 0.5; // Example calculation
-          const pdc = pac * 0.8; // Example calculation
-          const efficiency = (pac / pdc) * 100; // Example calculation
-
-          // Create a new table row with the results
-          const resultsTable = document.getElementById('results-table');
-          const resultsBody = document.getElementById('results-body');
-          const newRow = resultsBody.insertRow();
-          newRow.innerHTML = `
-              <td>${resultsBody.children.length}</td>
-              <td>${vin.toFixed(2)}</td>
-              <td>${vout.toFixed(2)}</td>
-              <td>${pac.toFixed(2)}</td>
-              <td>${pdc.toFixed(2)}</td>
-              <td>${efficiency.toFixed(2)}%</td>
-          `;
-      }
-  </script>
   </body>
 </html>
