@@ -11,8 +11,8 @@ function varinit() {
   //Variable slider and number input types
   $("#massSlider").slider("value", 25); // slider initialisation : jQuery widget
   $("#massSpinner").spinner("value", 25); // number initialisation : jQuery widget
-  $("#lengthSlider").slider("value", 10);
-  $("#lengthSpinner").spinner("value", 10);
+  $("#voltageSlider").slider("value", 10);
+  $("#input-voltage").spinner("value", 10);
   $("#dampSlider").slider("value", 0.05);
   $("#dampSpinner").spinner("value", 0.05);
   $("#CsArea").spinner("value", 0.01);
@@ -36,23 +36,23 @@ function varchange() {
     varchange();
   });
 
-  $("#lengthSlider").slider({ max: 100, min: 10, step: 10 });
-  $("#lengthSpinner").spinner({ max: 100, min: 10, step: 10 });
+  $("#voltageSlider").slider({ max: 165, min: 0, step: 5 });
+  $("#input-voltage").spinner({ max: 165, min: 0, step: 5 });
 
-  $("#lengthSlider").on("slide", function (e, ui) {
-    $("#lengthSpinner").spinner("value", ui.value);
+  $("#voltageSlider").on("slide", function (e, ui) {
+    $("#input-voltage").spinner("value", ui.value);
     time = 0;
     varupdate();
   });
-  $("#lengthSpinner").on("spin", function (e, ui) {
-    $("#lengthSlider").slider("value", ui.value);
+  $("#input-voltage").on("spin", function (e, ui) {
+    $("#voltageSlider").slider("value", ui.value);
     time = 0;
     varupdate();
   });
-  $("#lengthSpinner").on("change", function () {
+  $("#input-voltage").on("change", function () {
     varchange();
   });
-  $("#lengthSpinner").on("touch-start", function () {
+  $("#input-voltage").on("touch-start", function () {
     varchange();
   });
 
@@ -77,10 +77,10 @@ function varchange() {
 }
 function varupdate() {
   $("#massSpinner").spinner("value", $("#massSlider").slider("value")); //updating slider location with change in spinner(debug)
-  $("#lengthSpinner").spinner("value", $("#lengthSlider").slider("value"));
+  $("#input-voltage").spinner("value", $("#voltageSlider").slider("value"));
   $("#dampSpinner").spinner("value", $("#dampSlider").slider("value"));
   endmass = $("#massSpinner").spinner("value"); //Updating variables
-  beamlength = $("#lengthSpinner").spinner("value");
+  beamlength = $("#input-voltage").spinner("value");
   dampingratio = $("#dampSpinner").spinner("value");
   massbeam = (rho * A * beamlength) / 1000;
   m = (33 / 140) * massbeam + endmass;
@@ -173,3 +173,7 @@ const selectMaterial = function () {
   varupdate();
 };
 materials.addEventListener("change", selectMaterial);
+
+
+
+
