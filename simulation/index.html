@@ -5,6 +5,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SOLVE</title>
+    <!--this is for the sin wave -->
+
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <!---->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -129,6 +134,9 @@
               <div id="controls" class="div__control">
                 <img id="playpausebutton" onclick="simstate()" src="./images/blueplaydull.svg" alt="" />
                 <img id="graphbutton" onclick="plotgraph()" src="./images/graphbutton.svg" alt="" />
+
+    
+                
               </div>
             </div>
             
@@ -190,6 +198,53 @@
             `;
         }
               </script>
+
+
+<!--sin wave generation script-->
+
+<script>
+  function generateSineWave() {
+      const frequency = parseFloat(document.getElementById("frequency").value);
+      const amplitude = parseFloat(document.getElementById("amplitude").value);
+
+      const x = [];
+      const y = [];
+
+      for (let t = 0; t < 2 * Math.PI; t += 0.01) {
+          x.push(t);
+          y.push(amplitude * Math.sin(2 * Math.PI * frequency * t));
+      }
+
+      const trace = {
+          x: x,
+          y: y,
+          mode: 'lines',
+          type: 'scatter'
+      };
+
+      const layout = {
+          title: 'Sine Wave',
+          xaxis: {
+              title: 'Time (s)'
+          },
+          yaxis: {
+              title: 'Amplitude'
+          }
+      };
+
+      Plotly.newPlot('sineWavePlot', [trace], layout);
+
+      // Show the modal
+      const modal = document.getElementById('sineWaveModal');
+      modal.style.display = 'block';
+  }
+
+  function closeModal() {
+      // Close the modal
+      const modal = document.getElementById('sineWaveModal');
+      modal.style.display = 'none';
+  }
+</script>
                 <!--
                 <div class="var-div">
                   <label for="lengthSpinner">Length (mm)</label>
@@ -215,11 +270,12 @@
               <div class="settings-sections">
                 <div class="control-sections">
 
-                 <button style="width:30%;">Add to table</button>
-			
-            <img id="playpausebutton" style="width:40px;" onclick="simstate()" src="./images/blueplaydull.svg" alt="" />
-                <img id="graphbutton" style="width:40px;" onclick="plotgraph()" src="./images/graphbutton.svg" alt="" />
-              
+                 
+                <label for="frequency">Frequency (Hz):</label>
+                <input style="width:30%;" type="number" id="frequency" value="1"><br>
+                <label for="amplitude">Amplitude:</label>
+                <input style="width:30%;" type="number" id="amplitude" value="50"><br>
+                <button style="width:30%;" onclick="generateSineWave()">Generate</button><br>
                 </div>
               </div>
           </div>
@@ -243,6 +299,17 @@
               </tbody>
           </table>
             </div>
+
+            <!--div modal for sin wave starts here-->
+
+            <div id="sineWaveModal" class="modal">
+              <div class="modal-content">
+                  <span class="close" onclick="closeModal()">&times;</span>
+                  <div id="sineWavePlot"></div>
+              </div>
+            </div>
+            <!--div modal for sin wave ends here-->
+
               <div class="settings-sections">
                 <div class="control-sections">
 
