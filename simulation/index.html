@@ -20,6 +20,11 @@
     <link rel="stylesheet" href="css/general.css" />
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/query.css" />
+
+    <!--dot css-->
+    <link rel="stylesheet" href="./css/cktconnection_znr_line.css">
+    <link rel="stylesheet" href="./css/cktconnection_znr_load.css">
+
     <script
       defer
       src="https://code.jquery.com/jquery-3.7.0.min.js"
@@ -53,6 +58,29 @@
           text-align: center;
       }
   </style>
+
+
+<!--css for the ckt_values-->
+<style>
+  #whole_body{
+    position: relative;
+    margin-left: auto;
+    top: 0px;
+    margin-right: auto;
+    height: 390px;
+    width:760px;
+    }
+
+    #ckt_values1{
+      position: relative;
+      top:5px;
+      right: 210px;
+      left:370px;
+      height: 300px;
+      width: 400px;
+    }
+</style>
+
   </head>
   <body onload="startsim();varinit();
 ">
@@ -131,21 +159,56 @@
           <div id="simulation" class="main__task-div">
             <div class="title-control-div">
               <h3 class="task-title">Simulation</h3>
-              <div id="controls" class="div__control">
+              <!--<div id="controls" class="div__control">
                 <img id="playpausebutton" onclick="simstate()" src="./images/blueplaydull.svg" alt="" />
                 <img id="graphbutton" onclick="plotgraph()" src="./images/graphbutton.svg" alt="" />
 
     
                 
-              </div>
+              </div>-->
             </div>
             
             <div class="canvas__div">
-            
-               
-              <div id="canvas-container">
-                <canvas id="canvas" class="canvas"></canvas>
+
+              <!--div with the image and dit-->
+
+              <div id="whole_body">
+       
+                <div id="ckt_values1">
+                  <img src="./images/circuit1.jpeg" style="width:500px;height:300px;position:absolute;right:124px">
+                  <div class="jtk-demo-canvas canvas-wide animation-demo jtk-surface jtk-surface-nopan" id="canvas">
+                    <div class="littledot" id="ld1"></br><a href="#" class="cmdLink detach" rel="ld1">1</a></div>
+        
+                    <div class="littledot" id="ld3"></br><a href="#" class="cmdLink detach" rel="ld3">3</a></div>
+                    <div class="littledot" id="ld4"></br><a href="#" class="cmdLink detach" rel="ld4">4</a></div>
+                    <div class="littledot" id="ld5"></br><a href="#" class="cmdLink detach" rel="ld5">5</a></div>
+                  </div>
+                </div>
+                  <button id="check-button" 
+                    style="position:absolute; top:320px; width:120px; right:200px;cursor:pointer;  ">Check connection</button>
+                  <button id="delete-connct" onclick="deleteconnection()"
+                    style="position:absolute; top:320px; width:100px; right:80px;cursor:pointer; ">Delete all connection</button>
+
               </div>
+                <!--<img src="./images/circuit1.jpeg" style="width:400px;height:200px;position:relative;z-index: 0;" />
+    <div class="jtk-demo-canvas canvas-wide animation-demo jtk-surface jtk-surface-nopan" id="canvas">
+        <div class="littledot" id="ld1"></br><a href="#" class="cmdLink detach" rel="ld1">1</a>
+        </div>
+        
+        <div class="littledot" id="ld3"></br><a href="#" class="cmdLink detach" rel="ld3">3</a></div>
+        <div class="littledot" id="ld4"></br><a href="#" class="cmdLink detach" rel="ld4">4</a></div>
+        <div class="littledot" id="ld5"></br><a href="#" class="cmdLink detach" rel="ld5">5</a></div>
+        
+    
+    </div>-->
+    <script src="./js/jsplumb1.js"></script>
+
+<!--check delete buttons -->
+    
+            <!--<script type="text/javascript" src="./js/znrlo.js"></script>-->
+    <script src="./js/cktconnection_znr_load.js"></script>
+    
+
               <div class="graph-div display-hide">
                 <canvas id="graphscreen1" class="canvas"></canvas>
               </div>
@@ -162,8 +225,8 @@
                   <div class="var-div">
                     <!-- Input Voltage field -->
                     <label for="input-voltage">Input Voltage (mV):</label>
-                    <input type="number" id="input-voltage" value="20">
-                    <button style="width:30%;" onclick="calculateAndDisplay()">Add to table</button>
+                    <input style="width:100%;"type="number" id="input-voltage" value="20">
+                    <button style="width:50%;" onclick="calculateAndDisplay()">Add to table</button>
                 </div>
                 
                 
@@ -204,7 +267,7 @@
 
 <script>
   function generateSineWave() {
-      const frequency = parseFloat(document.getElementById("frequency").value);
+      const frequency = 1;
       const amplitude = parseFloat(document.getElementById("amplitude").value);
 
       const x = [];
@@ -228,15 +291,27 @@
               title: 'Time (s)'
           },
           yaxis: {
-              title: 'Amplitude'
+              title: 'Vout (V)'
           }
       };
 
+      // Create the Plotly chart
       Plotly.newPlot('sineWavePlot', [trace], layout);
+
+      // Customize the Plotly chart configuration
+      Plotly.update('sineWavePlot', {}, {
+          displayModeBar: false, // Remove the mode bar (zoom, pan, etc.)
+          displaylogo: false, // Remove the Plotly logo
+          responsive: true // Enable responsiveness
+      });
 
       // Show the modal
       const modal = document.getElementById('sineWaveModal');
       modal.style.display = 'block';
+      const modeBar = document.querySelector('.plotly .modebar');
+      if (modeBar) {
+          modeBar.style.display = 'none';
+      }
   }
 
   function closeModal() {
@@ -271,8 +346,8 @@
                 <div class="control-sections">
 
                  
-                <label for="frequency">Frequency (Hz):</label>
-                <input style="width:30%;" type="number" id="frequency" value="1"><br>
+                <!--<label for="frequency">Frequency (Hz):</label>
+                <input style="width:30%;" type="number" id="frequency" value="1"><br>-->
                 <label for="amplitude">Amplitude:</label>
                 <input style="width:30%;" type="number" id="amplitude" value="50"><br>
                 <button style="width:30%;" onclick="generateSineWave()">Generate</button><br>
